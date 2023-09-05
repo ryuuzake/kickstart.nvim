@@ -109,6 +109,14 @@ require('lazy').setup({
     },
   },
 
+  {
+    'jose-elias-alvarez/null-ls.nvim',
+    requires = 'nvim-lua/plenary.nvim'
+  },
+
+  { 'davidmh/cspell.nvim' },
+  { 'jamestthompson3/sort-import.nvim', config = function() require 'sort-import'.setup() end },
+
   -- Useful plugin to show you pending keybinds.
   { 'folke/which-key.nvim', opts = {} },
   {
@@ -177,15 +185,15 @@ require('lazy').setup({
       -- Fuzzy Finder Algorithm which requires local dependencies to be built.
       -- Only load if `make` is available. Make sure you have the system
       -- requirements installed.
-      {
-        'nvim-telescope/telescope-fzf-native.nvim',
-        -- NOTE: If you are having trouble with this installation,
-        --       refer to the README for telescope-fzf-native for more instructions.
-        build = 'make',
-        cond = function()
-          return vim.fn.executable 'make' == 1
-        end,
-      },
+      --{
+      --  'nvim-telescope/telescope-fzf-native.nvim',
+      --  -- NOTE: If you are having trouble with this installation,
+      --  --       refer to the README for telescope-fzf-native for more instructions.
+      --  build = 'make',
+      --  cond = function()
+      --    return vim.fn.executable 'make' == 1
+      --  end,
+      --},
     },
   },
 
@@ -201,7 +209,7 @@ require('lazy').setup({
   -- NOTE: Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart
   --       These are some example plugins that I've included in the kickstart repository.
   --       Uncomment any of the lines below to enable them.
-  -- require 'kickstart.plugins.autoformat',
+  require 'kickstart.plugins.autoformat',
   -- require 'kickstart.plugins.debug',
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
@@ -225,6 +233,9 @@ vim.wo.number = true
 
 -- Enable mouse mode
 vim.o.mouse = 'a'
+
+-- Add scroll bound
+vim.opt.scrolloff = 8
 
 -- Sync clipboard between OS and Neovim.
 --  Remove this option if you want your OS clipboard to remain independent.
@@ -264,6 +275,9 @@ vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
 vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
 vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
 
+-- Remap for Ex as [P]roject [V]iew
+vim.keymap.set("n", "<leader>pv", vim.cmd.Ex, { desc = '[P]roject [V]iew' })
+
 -- [[ Highlight on yank ]]
 -- See `:help vim.highlight.on_yank()`
 local highlight_group = vim.api.nvim_create_augroup('YankHighlight', { clear = true })
@@ -289,7 +303,7 @@ require('telescope').setup {
 }
 
 -- Enable telescope fzf native, if installed
-pcall(require('telescope').load_extension, 'fzf')
+--pcall(require('telescope').load_extension, 'fzf')
 
 -- See `:help telescope.builtin`
 vim.keymap.set('n', '<leader>?', require('telescope.builtin').oldfiles, { desc = '[?] Find recently opened files' })
@@ -422,7 +436,12 @@ local on_attach = function(_, bufnr)
 
   -- Create a command `:Format` local to the LSP buffer
   vim.api.nvim_buf_create_user_command(bufnr, 'Format', function(_)
-    vim.lsp.buf.format()
+    vim.lsp.buf.format({
+      bufnr = bufnr,
+      filter = function(client)
+        return client.name == "null-ls"
+      end
+    })
   end, { desc = 'Format current buffer with LSP' })
 end
 
@@ -474,6 +493,17 @@ mason_lspconfig.setup_handlers {
     }
   end
 }
+
+-- [[ Configure null-ls ]]
+local null_ls = require("null-ls")
+local cspell = require('cspell')
+null_ls.setup({
+  sources = {
+    null_ls.builtins.formatting.prettierd,
+    cspell.diagnostics,
+    cspell.code_actions,
+  },
+})
 
 -- [[ Configure nvim-cmp ]]
 -- See `:help cmp`

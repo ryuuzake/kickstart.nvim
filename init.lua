@@ -190,7 +190,7 @@ require('lazy').setup({
   },
 
   -- "gc" to comment visual regions/lines
-  { 'numToStr/Comment.nvim', opts = {} },
+  { 'numToStr/Comment.nvim',  opts = {} },
 
   -- Fuzzy Finder (files, lsp, etc)
   {
@@ -234,7 +234,7 @@ require('lazy').setup({
   --    Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
   --
   --    For additional information see: https://github.com/folke/lazy.nvim#-structuring-your-plugins
-  -- { import = 'custom.plugins' },
+  { import = 'custom.plugins' },
 }, {})
 
 -- [[ Setting options ]]
@@ -293,6 +293,7 @@ vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = tr
 
 -- Remap for Ex as [P]roject [V]iew
 vim.keymap.set("n", "<leader>pv", vim.cmd.Ex, { desc = '[P]roject [V]iew' })
+vim.keymap.set("n", "<leader>sv", ":vsplit<CR>", { desc = '[S]plit [V]ertical' })
 
 -- [[ Highlight on yank ]]
 -- See `:help vim.highlight.on_yank()`
@@ -539,6 +540,13 @@ null_ls.setup({
     null_ls.builtins.formatting.prettierd,
     cspell.diagnostics,
     cspell.code_actions,
+    null_ls.builtins.formatting.dart_format,
+    null_ls.builtins.formatting.golines.with({
+      extra_args = {
+        "--max-len=180",
+        "--base-formatter=gofumpt",
+      },
+    }),
   },
 })
 

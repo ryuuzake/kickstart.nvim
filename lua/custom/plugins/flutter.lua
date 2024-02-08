@@ -64,5 +64,7 @@ return {
         on_attach = on_attach
       },
     }
+
+    require("telescope").load_extension("flutter")
   end
 }

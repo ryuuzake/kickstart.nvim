@@ -336,6 +336,9 @@ vim.o.completeopt = 'menuone,noselect'
 -- NOTE: You should make sure your terminal supports this
 vim.o.termguicolors = true
 
+-- Setup .exrc
+vim.o.exrc = true
+
 -- [[ Basic Keymaps ]]
 
 -- Keymaps for better default experience
@@ -446,6 +449,8 @@ vim.keymap.set('n', '<leader>sg', require('telescope.builtin').live_grep, { desc
 vim.keymap.set('n', '<leader>sG', ':LiveGrepGitRoot<cr>', { desc = '[S]earch by [G]rep on Git Root' })
 vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { desc = '[S]earch [D]iagnostics' })
 vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc = '[S]earch [R]esume' })
+vim.keymap.set('n', '<leader>fl', function() require('telescope').extensions.flutter.commands() end,
+  { desc = '[Fl]utter Tools' })
 
 -- [[ Configure Treesitter ]]
 -- See `:help nvim-treesitter`
@@ -472,7 +477,7 @@ vim.defer_fn(function()
         init_selection = '<c-space>',
         node_incremental = '<c-space>',
         scope_incremental = '<c-s>',
-        node_decremental = '<M-space>',
+        node_decremental = '<A-space>',
       },
     },
     textobjects = {
@@ -664,6 +669,9 @@ null_ls.setup({
       },
     }),
   },
+  should_attach = function(bufnr)
+    return not vim.api.nvim_buf_get_name(bufnr):match("^__FLUTTER_DEV_LOG__$")
+  end,
 })
 
 -- [[ Configure nvim-cmp ]]
@@ -712,9 +720,28 @@ cmp.setup {
     end, { 'i', 's' }),
   },
   sources = {
+    { name = 'copilot' },
     { name = 'nvim_lsp' },
     { name = 'luasnip' },
     { name = 'path' },
+  },
+  sorting = {
+    priority_weight = 2,
+    comparators = {
+      require("copilot_cmp.comparators").prioritize,
+
+      -- Below is the default comparitor list and order for nvim-cmp
+      cmp.config.compare.offset,
+      -- cmp.config.compare.scopes, --this is commented in nvim-cmp too
+      cmp.config.compare.exact,
+      cmp.config.compare.score,
+      cmp.config.compare.recently_used,
+      cmp.config.compare.locality,
+      cmp.config.compare.kind,
+      cmp.config.compare.sort_text,
+      cmp.config.compare.length,
+      cmp.config.compare.order,
+    },
   },
 }
 

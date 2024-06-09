@@ -48,6 +48,7 @@ return {
         group = lint_augroup,
         callback = function()
           require('lint').try_lint()
+          require('lint').try_lint 'cspell'
         end,
       })
     end,

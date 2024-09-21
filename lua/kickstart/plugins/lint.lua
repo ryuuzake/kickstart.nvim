@@ -7,6 +7,7 @@ return {
       local lint = require 'lint'
       lint.linters_by_ft = {
         markdown = { 'markdownlint' },
+        vue = { 'eslint' },
       }
 
       -- To allow other plugins to add linters to require('lint').linters_by_ft,
@@ -48,7 +49,6 @@ return {
         group = lint_augroup,
         callback = function()
           require('lint').try_lint()
-          require('lint').try_lint 'cspell'
         end,
       })
     end,

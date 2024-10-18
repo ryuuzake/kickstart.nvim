@@ -18,6 +18,7 @@ return {
           end
           return true
         end,
+        copilot_node_command = vim.fn.expand '$FNM_DIR/aliases/default/bin/node',
       },
     }
   end,

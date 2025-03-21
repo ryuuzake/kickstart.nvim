@@ -644,6 +644,8 @@ require('lazy').setup({
           filetypes = { 'templ', 'astro', 'javascript', 'typescript', 'react', 'typescriptreact' },
           init_options = { userLanguages = { templ = 'html' } },
         },
+
+        harper_ls = { filetypes = { 'markdown' } },
       }
 
       -- Ensure the servers and tools above are installed

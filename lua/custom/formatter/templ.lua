@@ -1,18 +1,13 @@
-local h = require("null-ls.helpers")
-local methods = require("null-ls.methods")
-
-local FORMATTING = methods.internal.FORMATTING
-
-return h.make_builtin({
-  method = FORMATTING,
-  generator_opts = {
-    command = "templ",
-    args = {
-      "fmt",
-    },
-    to_stdin = true,
+return require('conform').setup {
+  formatters_by_ft = {
+    templ = { 'templ' },
   },
-  filetypes = { "templ" },
-  factory = h.formatter_factory,
-})
+  formatters = {
+    templ = {
+      command = 'templ',
+      args = { 'fmt', '-' },
+      stdin = true,
+    },
+  },
+}
 -- vim: ts=2 sts=2 sw=2 et

@@ -732,6 +732,7 @@ require('lazy').setup({
         typescriptreact = { 'prettierd', 'prettier', stop_after_first = true },
         css = { 'prettierd', 'prettier', stop_after_first = true },
         less = { 'prettierd', 'prettier', stop_after_first = true },
+        groovy = { 'npm-groovy-lint' },
         ['*'] = { 'codespell' },
       },
     },

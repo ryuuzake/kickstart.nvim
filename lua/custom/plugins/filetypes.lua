@@ -1,6 +1,5 @@
 return {
   {
-    'Custom filetype mappings',
     config = function()
       vim.filetype.add {
         extension = {

@@ -645,9 +645,6 @@ require('lazy').setup({
           },
         },
 
-        html = { filetypes = { 'html', 'twig', 'hbs', 'templ' } },
-        templ = {},
-        htmx = { filetypes = { 'html', 'templ' } },
         tailwindcss = {
           filetypes = { 'templ', 'astro', 'javascript', 'typescript', 'react', 'typescriptreact' },
           init_options = { userLanguages = { templ = 'html' } },

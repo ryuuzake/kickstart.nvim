@@ -966,5 +966,8 @@ require('lazy').setup({
   },
 })
 
+-- Load custom filetype mappings (not a plugin, just config)
+require 'custom.plugins.filetypes'
+
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et

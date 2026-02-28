@@ -1,7 +1,13 @@
--- Custom filetype mappings to avoid conflicts with upstream
-vim.filetype.add {
-  extension = {
-    axml = 'xml',
-    acss = 'css',
+return {
+  {
+    'Custom filetype mappings',
+    config = function()
+      vim.filetype.add {
+        extension = {
+          axml = 'xml',
+          acss = 'css',
+        },
+      }
+    end,
   },
 }

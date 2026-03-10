@@ -722,6 +722,7 @@ require('lazy').setup({
         css = { 'prettierd', 'prettier', stop_after_first = true },
         less = { 'prettierd', 'prettier', stop_after_first = true },
         groovy = { 'npm-groovy-lint' },
+        nix = { 'nixfmt', 'nixpkgs-fmt' },
         ['*'] = { 'codespell' },
       },
     },

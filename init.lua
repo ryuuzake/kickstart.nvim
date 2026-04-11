@@ -416,6 +416,7 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
       vim.keymap.set('n', '<leader>sc', builtin.commands, { desc = '[S]earch [C]ommands' })
       vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
+      vim.keymap.set('n', '<leader>sq', builtin.quickfix, { desc = '[S]earch [Q]uickfix' })
 
       -- This runs on LSP attach per buffer (see main LSP attach function in 'neovim/nvim-lspconfig' config for more info,
       -- it is better explained there). This allows easily switching between pickers if you prefer using something else!
@@ -616,7 +617,28 @@ require('lazy').setup({
         --    https://github.com/pmizio/typescript-tools.nvim
         --
         -- But for many setups, the LSP (`ts_ls`) will work just fine
-        -- ts_ls = {},
+        ts_ls = {
+          settings = {
+            typescript = {
+              inlayHints = {
+                includeInlayParameterNameHints = 'all',
+                includeInlayFunctionParameterTypeHints = true,
+                includeInlayVariableTypeHints = true,
+                includeInlayPropertyDeclarationTypeHints = true,
+                includeInlayFunctionLikeReturnTypeHints = true,
+              },
+            },
+            javascript = {
+              inlayHints = {
+                includeInlayParameterNameHints = 'all',
+                includeInlayFunctionParameterTypeHints = true,
+                includeInlayVariableTypeHints = true,
+                includeInlayPropertyDeclarationTypeHints = true,
+                includeInlayFunctionLikeReturnTypeHints = true,
+              },
+            },
+          },
+        },
 
         stylua = {}, -- Used to format Lua code
 
@@ -649,12 +671,15 @@ require('lazy').setup({
           },
         },
 
+        html = { filetypes = { 'html', 'twig', 'hbs', 'templ' } },
+        templ = {},
+        -- htmx = { filetypes = { 'html', 'templ' } },
         tailwindcss = {
           filetypes = { 'templ', 'astro', 'javascript', 'typescript', 'react', 'typescriptreact' },
           init_options = { userLanguages = { templ = 'html' } },
         },
 
-        harper_ls = { filetypes = { 'markdown' } },
+        harper_ls = { filetypes = { 'markdown' }, hover = false },
       }
 
       -- Ensure the servers and tools above are installed
@@ -723,6 +748,8 @@ require('lazy').setup({
         less = { 'prettierd', 'prettier', stop_after_first = true },
         groovy = { 'npm-groovy-lint' },
         nix = { 'nixfmt', 'nixpkgs-fmt' },
+        yaml = { 'yamlfmt' },
+        python = { 'autopep8' },
         ['*'] = { 'codespell' },
       },
     },
@@ -783,7 +810,7 @@ require('lazy').setup({
         -- <c-k>: Toggle signature help
         --
         -- See :h blink-cmp-config-keymap for defining your own keymap
-        preset = 'default',
+        preset = 'super-tab',
 
         -- For more advanced Luasnip keymaps (e.g. selecting choice nodes, expansion) see:
         --    https://github.com/L3MON4D3/LuaSnip?tab=readme-ov-file#keymaps

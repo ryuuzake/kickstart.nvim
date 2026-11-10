@@ -151,6 +151,13 @@ vim.o.splitbelow = true
 vim.o.list = true
 vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
 
+-- Default to spaces everywhere. Filetypes that need tabs (go, make) override
+-- this in their own ftplugin, and per-language widths live in ftplugin/.
+vim.o.expandtab = true
+vim.o.shiftwidth = 2
+vim.o.tabstop = 2
+vim.o.softtabstop = 2
+
 -- Preview substitutions live, as you type!
 vim.o.inccommand = 'split'
 
@@ -257,7 +264,14 @@ rtp:prepend(lazypath)
 -- NOTE: Here is where you install your plugins.
 require('lazy').setup({
   -- NOTE: Plugins can be added via a link or github org/name. To run setup automatically, use `opts = {}`
-  { 'NMAC427/guess-indent.nvim', opts = {} },
+  {
+    'NMAC427/guess-indent.nvim',
+    opts = {
+      -- These filetypes have an explicit style in ftplugin/, so don't let
+      -- detection flip them back to tabs.
+      filetype_exclude = { 'netrw', 'tutor', 'javascript', 'javascriptreact', 'typescript', 'typescriptreact', 'astro', 'templ' },
+    },
+  },
 
   -- Alternatively, use `config = function() ... end` for full control over the configuration.
   -- If you prefer to call `setup` explicitly, use:
@@ -496,8 +510,6 @@ require('lazy').setup({
         ---@diagnostic disable-next-line: missing-fields
         opts = {},
       },
-      -- Maps LSP server names between nvim-lspconfig and Mason package names.
-      'mason-org/mason-lspconfig.nvim',
       'WhoIsSethDaniel/mason-tool-installer.nvim',
 
       -- Useful status updates for LSP.
@@ -679,30 +691,52 @@ require('lazy').setup({
           },
         },
 
+        cssls = {},
         html = { filetypes = { 'html', 'twig', 'hbs', 'templ' } },
-        templ = {},
         -- htmx = { filetypes = { 'html', 'templ' } },
         tailwindcss = {
           filetypes = { 'templ', 'astro', 'javascript', 'typescript', 'react', 'typescriptreact' },
-          init_options = { userLanguages = { templ = 'html' } },
+          settings = { tailwindCSS = { includeLanguages = { templ = 'html' } } },
         },
 
-        harper_ls = { filetypes = { 'markdown' }, hover = false },
+        harper_ls = { filetypes = { 'markdown' } },
+
+        -- Additional servers backed by Mason packages
+        yamlls = {},
+        jsonls = {},
+        ruff = {},
+        oxlint = {},
+        rnix = {},
       }
 
-      -- Ensure the servers and tools above are installed
-      --
-      -- To check the current status of installed tools and/or manually install
-      -- other tools, you can run
-      --    :Mason
-      --
-      -- You can press `g?` for help in this menu.
-      local ensure_installed = vim.tbl_keys(servers or {})
-      vim.list_extend(ensure_installed, {
-        -- You can add other tools here that you want Mason to install
-      })
+      -- Mason package names differ from LSP config names (e.g. `lua_ls` ->
+      -- `lua-language-server`), so keep an explicit list of every external tool
+      -- that nvim-lspconfig, conform.nvim and nvim-lint rely on.
+      local mason_tools = {
+        -- LSP servers
+        'gopls',
+        'typescript-language-server',
+        'lua-language-server',
+        'css-lsp',
+        'html-lsp',
+        'tailwindcss-language-server',
+        'harper-ls',
+        'yaml-language-server',
+        'json-lsp',
+        'ruff',
+        'oxlint',
+        'rnix-lsp',
+        -- Formatters / linters
+        'stylua',
+        'oxfmt',
+        'nixfmt',
+        'yamlfmt',
+        'markdownlint',
+        'npm-groovy-lint',
+        'codespell',
+      }
 
-      require('mason-tool-installer').setup { ensure_installed = ensure_installed }
+      require('mason-tool-installer').setup { ensure_installed = mason_tools }
 
       for name, server in pairs(servers) do
         vim.lsp.config(name, server)
@@ -748,16 +782,16 @@ require('lazy').setup({
         --
         -- You can use 'stop_after_first' to run the first available formatter from the list
         -- javascript = { "prettierd", "prettier", stop_after_first = true },
-        javascript = { 'oxfmt', 'prettierd', 'prettier', stop_after_first = true },
-        javascriptreact = { 'oxfmt', 'prettierd', 'prettier', stop_after_first = true },
-        typescript = { 'oxfmt', 'prettierd', 'prettier', stop_after_first = true },
-        typescriptreact = { 'oxfmt', 'prettierd', 'prettier', stop_after_first = true },
-        css = { 'oxfmt', 'prettierd', 'prettier', stop_after_first = true },
-        less = { 'oxfmt', 'prettierd', 'prettier', stop_after_first = true },
+        javascript = { 'oxfmt' },
+        javascriptreact = { 'oxfmt' },
+        typescript = { 'oxfmt' },
+        typescriptreact = { 'oxfmt' },
+        css = { 'oxfmt' },
+        less = { 'oxfmt' },
         python = { 'ruff_format' },
         go = { 'goimports', 'gofumpt', 'golines' },
         groovy = { 'npm-groovy-lint' },
-        nix = { 'nixfmt', 'nixpkgs-fmt' },
+        nix = { 'nixfmt' },
         yaml = { 'yamlfmt' },
         caddy = { 'caddyfmt' },
 

@@ -503,7 +503,14 @@ require('lazy').setup({
       { 'j-hui/fidget.nvim', opts = {} },
 
       -- Allows extra capabilities provided by blink.cmp
-      'saghen/blink.cmp',
+      {
+        'saghen/blink.cmp',
+        dependencies = 'rafamadriz/friendly-snippets',
+        version = '*', -- Use a release tag to download pre-built binaries automatically
+
+        -- Add this line to build the fuzzy library from source
+        build = 'cargo build --release',
+      },
     },
     config = function()
       -- Brief aside: **What is LSP?**

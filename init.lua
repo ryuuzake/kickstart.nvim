@@ -758,7 +758,16 @@ require('lazy').setup({
         groovy = { 'npm-groovy-lint' },
         nix = { 'nixfmt', 'nixpkgs-fmt' },
         yaml = { 'yamlfmt' },
+        caddy = { 'caddyfmt' },
+
         ['*'] = { 'codespell' },
+      },
+      formatters = {
+        caddyfmt = {
+          command = 'caddy',
+          args = { 'fmt', '-' },
+          stdin = true,
+        },
       },
     },
   },

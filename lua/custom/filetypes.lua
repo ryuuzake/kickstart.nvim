@@ -4,5 +4,9 @@ vim.filetype.add {
   extension = {
     axml = 'xml',
     acss = 'css',
+    caddy = 'caddy',
+  },
+  filename = {
+    ['Caddyfile'] = 'caddy',
   },
 }

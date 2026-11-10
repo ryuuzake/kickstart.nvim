@@ -922,18 +922,26 @@ require('lazy').setup({
     lazy = false,
     build = ':TSUpdate',
     branch = 'main',
-    opts = {
-      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' },
-      sync_install = false,
-      auto_install = true,
-      highlight = {
-        enable = true,
-        additional_vim_regex_highlighting = false,
-      },
-      indent = {
-        enable = true,
-      },
-    },
+    -- The `main` branch only takes `install_dir` in setup(); highlighting and
+    -- indent are enabled explicitly below. Without a parser, `nvim-treesitter`
+    -- indentexpr() fails, so only enable it when a parser is available.
+    config = function()
+      local languages = { 'javascript', 'typescript', 'tsx' }
+      local installed = require('nvim-treesitter').get_installed 'parsers'
+      local missing = vim.tbl_filter(function(lang) return not vim.tbl_contains(installed, lang) end, languages)
+      if #missing > 0 then require('nvim-treesitter').install(missing) end
+
+      vim.api.nvim_create_autocmd('FileType', {
+        pattern = { 'javascript', 'javascriptreact', 'typescript', 'typescriptreact' },
+        callback = function()
+          local ok, parser = pcall(vim.treesitter.get_parser, 0)
+          if ok and parser then
+            vim.treesitter.start(0, parser:lang())
+            vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+          end
+        end,
+      })
+    end,
   },
 
   -- The following comments only work if you have downloaded the kickstart repo, not just copy pasted the

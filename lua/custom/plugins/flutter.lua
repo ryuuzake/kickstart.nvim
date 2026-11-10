@@ -8,9 +8,7 @@ local on_attach = function(_, bufnr)
   -- In this case, we create a function that lets us more easily define mappings specific
   -- for LSP related items. It sets the mode, buffer and description for us each time.
   local nmap = function(keys, func, desc)
-    if desc then
-      desc = 'LSP: ' .. desc
-    end
+    if desc then desc = 'LSP: ' .. desc end
 
     vim.keymap.set('n', keys, func, { buffer = bufnr, desc = desc })
   end
@@ -42,6 +40,7 @@ end
 
 return {
   'akinsho/flutter-tools.nvim',
+  enabled = false,
   -- lazy = false,
   dependencies = {
     'nvim-lua/plenary.nvim',
@@ -51,18 +50,18 @@ return {
     require('flutter-tools').setup {
       fvm = true,
       lsp = {
-        color = {         -- show the derived colours for dart variables
+        color = { -- show the derived colours for dart variables
           enabled = true, -- whether or not to highlight color variables at all, only supported on flutter >= 2.10
         },
         settings = {
           showTodos = true,
           completeFunctionCalls = true,
-          renameFilesWithClasses = "prompt", -- "always"
+          renameFilesWithClasses = 'prompt', -- "always"
           enableSnippets = true,
           enableSdkFormatter = true,
         },
-        on_attach = on_attach
+        on_attach = on_attach,
       },
     }
-  end
+  end,
 }

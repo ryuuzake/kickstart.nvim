@@ -728,13 +728,15 @@ require('lazy').setup({
         'oxlint',
         'rnix-lsp',
         -- Formatters / linters
+        -- `nixfmt` and `codespell` are installed outside Mason: Mason has no
+        -- darwin binary for nixfmt, and its Python venv is blocked by Homebrew's
+        -- PEP 668 marker. Install them with `brew install nixfmt` and
+        -- `uv tool install codespell`.
         'stylua',
         'oxfmt',
-        'nixfmt',
         'yamlfmt',
         'markdownlint',
         'npm-groovy-lint',
-        'codespell',
       }
 
       require('mason-tool-installer').setup { ensure_installed = mason_tools }

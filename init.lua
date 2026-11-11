@@ -699,7 +699,7 @@ require('lazy').setup({
           settings = { tailwindCSS = { includeLanguages = { templ = 'html' } } },
         },
 
-        harper_ls = { filetypes = { 'markdown' } },
+        harper_ls = { filetypes = { 'markdown' }, hover = false },
 
         -- Additional servers backed by Mason packages
         yamlls = {},
@@ -707,6 +707,7 @@ require('lazy').setup({
         ruff = {},
         oxlint = {},
         rnix = {},
+        ty = {},
       }
 
       -- Mason package names differ from LSP config names (e.g. `lua_ls` ->
